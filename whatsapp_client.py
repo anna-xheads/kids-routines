@@ -19,12 +19,12 @@ class WhatsAppClient:
         self.api_token = api_token
         self.base_url = f"https://api.green-api.com/waInstance{instance_id}"
     
-    def send_message(self, phone_number, message):
+    def send_message(self, chat_id, message):
         """
         Send a WhatsApp message.
         
         Args:
-            phone_number: Phone number in international format (e.g., '972528798977')
+            chat_id: Chat ID (phone number like '972528798977@c.us' or group like '120363404296654202@g.us')
             message: Text message to send
             
         Returns:
@@ -32,8 +32,12 @@ class WhatsAppClient:
         """
         url = f"{self.base_url}/sendMessage/{self.api_token}"
         
+        # If chat_id doesn't contain @, assume it's a phone number and add @c.us
+        if '@' not in chat_id:
+            chat_id = f"{chat_id}@c.us"
+        
         payload = {
-            "chatId": f"{phone_number}@c.us",
+            "chatId": chat_id,
             "message": message
         }
         
@@ -50,12 +54,12 @@ class WhatsAppClient:
                 'error': str(e)
             }
     
-    def send_messages_with_delay(self, phone_number, messages, delay=2):
+    def send_messages_with_delay(self, chat_id, messages, delay=2):
         """
         Send multiple messages with a delay between them.
         
         Args:
-            phone_number: Phone number to send to
+            chat_id: Chat ID (phone number or group)
             messages: List of message strings
             delay: Seconds to wait between messages
             
@@ -66,7 +70,7 @@ class WhatsAppClient:
         
         for i, message in enumerate(messages):
             print(f"📤 Sending message {i+1}/{len(messages)}...")
-            result = self.send_message(phone_number, message)
+            result = self.send_message(chat_id, message)
             results.append(result)
             
             if result['success']:

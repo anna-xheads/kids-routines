@@ -9,7 +9,7 @@ from whatsapp_client import WhatsAppClient
 # Configuration
 INSTANCE_ID = "7105233428"
 API_TOKEN = "01be127289a24d33871059257b7c6ac6fac9a551f1e5425db7"
-PHONE_NUMBER = "972528798977"
+GROUP_CHAT_ID = "120363404296654202@g.us"  # WhatsApp group "Feldman mornings"
 
 
 def format_routine_message(kid_name, breakfast, vegetable):
@@ -90,11 +90,11 @@ def send_morning_routines():
         
         # Send all messages
         if messages:
-            print(f"📤 Sending {len(messages)} WhatsApp messages to {PHONE_NUMBER}...")
+            print(f"📤 Sending {len(messages)} WhatsApp messages to group 'Feldman mornings'...")
             print()
             
             results = whatsapp_client.send_messages_with_delay(
-                PHONE_NUMBER, 
+                GROUP_CHAT_ID, 
                 messages, 
                 delay=3  # 3 seconds between messages
             )
