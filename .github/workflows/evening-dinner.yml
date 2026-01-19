@@ -1,0 +1,43 @@
+name: Evening Dinner Lottery
+
+on:
+  schedule:
+    # Run every day at 18:00 (6 PM) Israel time
+    # During winter (IST, UTC+2): 16:00 UTC = 18:00 Israel
+    # During summer (IDT, UTC+3): 15:00 UTC = 18:00 Israel
+    # Using 15:00 UTC to ensure 6 PM during daylight saving time
+    - cron: '0 15 * * *'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  send-evening-dinner:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Create secrets directory
+        run: mkdir -p secrets
+      
+      - name: Create service account file
+        env:
+          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+        run: |
+          echo "$SERVICE_ACCOUNT_JSON" > secrets/service_account.json
+      
+      - name: Send evening dinner lottery
+        env:
+          GREEN_API_INSTANCE_ID: ${{ secrets.GREEN_API_INSTANCE_ID }}
+          GREEN_API_TOKEN: ${{ secrets.GREEN_API_TOKEN }}
+        run: python send_evening_dinner.py

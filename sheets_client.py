@@ -9,7 +9,7 @@ class GoogleSheetsClient:
     
     def __init__(self, service_account_file='secrets/service_account.json', 
                  spreadsheet_id='1MZ6NRdtndGjcitSR3qKT250Ni5TPjDyinI-1o_1OcKA',
-                 worksheet_name='Morning_food'):
+                 worksheet_name='Food'):
         """
         Initialize the Google Sheets client.
         

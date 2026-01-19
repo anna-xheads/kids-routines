@@ -25,7 +25,7 @@ This bot reads breakfast and vegetable options from a Google Sheet and sends per
 2. **Green API (WhatsApp)**
    - Instance ID: `7105233428`
    - API Token: `01be127289a24d33871059257b7c6ac6fac9a551f1e5425db7`
-   - Target phone: `972528798977`
+   - Target: WhatsApp Group "Feldman mornings" (`120363404296654202@g.us`)
 
 ### Installation
 
