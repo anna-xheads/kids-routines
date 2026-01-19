@@ -135,7 +135,7 @@ def send_evening_dinner():
             result = whatsapp_client.send_message(GROUP_CHAT_ID, count_msg)
             if result['success']:
                 print(f"   ✅ Countdown {i}/5 sent")
-            time.sleep(1.5)
+            time.sleep(5)  # 5 seconds between countdown messages
         
         # Send result
         print()

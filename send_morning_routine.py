@@ -1,6 +1,7 @@
 """Daily kids' morning routine - sends random breakfast options via WhatsApp."""
 
 import random
+import time
 from datetime import datetime
 from sheets_client import GoogleSheetsClient
 from whatsapp_client import WhatsAppClient
@@ -107,9 +108,31 @@ def send_morning_routines():
         
         # Send all messages
         if messages:
-            print(f"📤 Sending {len(messages)} WhatsApp messages to group 'Feldman mornings'...")
+            print(f"📤 Sending morning routine to group 'Feldman mornings'...")
             print()
             
+            # Send intro message
+            intro_message = "🌅 בוקר טוב משפחת פלדמן! הארוחת בוקר המוגרלת היא..."
+            print("📤 Sending intro message...")
+            result = whatsapp_client.send_message(GROUP_CHAT_ID, intro_message)
+            if result['success']:
+                print("   ✅ Intro sent")
+            time.sleep(2)
+            
+            # Send countdown
+            print("⏳ Sending countdown...")
+            countdown_messages = ["5️⃣", "4️⃣", "3️⃣", "2️⃣", "1️⃣"]
+            for i, count_msg in enumerate(countdown_messages, 1):
+                print(f"   {count_msg}")
+                result = whatsapp_client.send_message(GROUP_CHAT_ID, count_msg)
+                if result['success']:
+                    print(f"   ✅ Countdown {i}/5 sent")
+                time.sleep(5)  # 5 seconds between countdown messages
+            
+            print()
+            print("🎉 Sending breakfast results...")
+            
+            # Send breakfast messages for each kid
             results = whatsapp_client.send_messages_with_delay(
                 GROUP_CHAT_ID, 
                 messages, 
