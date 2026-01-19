@@ -37,20 +37,22 @@ class GoogleSheetsClient:
         self.spreadsheet = self.client.open_by_key(spreadsheet_id)
         self.worksheet = self.spreadsheet.worksheet(worksheet_name)
     
-    def get_kid_options(self, kid_name):
+    def get_kid_options(self, kid_name, include_sweet=False):
         """
         Get breakfast and vegetable options for a specific kid.
         
         Args:
             kid_name: Name of the kid (e.g., 'ליה' or 'דן')
+            include_sweet: If True, include sweet items (Column D = מתוק/true)
             
         Returns:
-            dict with 'breakfast' and 'vegetables' lists
+            dict with 'breakfast', 'vegetables', and 'sweet_breakfast' lists
         """
         all_values = self.worksheet.get_all_values()
         
         breakfast_options = []
         vegetable_options = []
+        sweet_breakfast_options = []
         
         for row in all_values:
             # Skip header rows
@@ -59,9 +61,15 @@ class GoogleSheetsClient:
             
             # Check if this row is for the specified kid
             if row[2].strip() == kid_name:
+                # Check if Column D (index 3) indicates sweet item
+                is_sweet = len(row) > 3 and row[3] and row[3].strip() in ['מתוק', 'true', 'True', 'TRUE']
+                
                 # Column A (index 0) - breakfast
                 if row[0] and row[0].strip():
-                    breakfast_options.append(row[0].strip())
+                    if is_sweet:
+                        sweet_breakfast_options.append(row[0].strip())
+                    else:
+                        breakfast_options.append(row[0].strip())
                 
                 # Column B (index 1) - vegetables
                 if row[1] and row[1].strip():
@@ -69,7 +77,8 @@ class GoogleSheetsClient:
         
         return {
             'breakfast': breakfast_options,
-            'vegetables': vegetable_options
+            'vegetables': vegetable_options,
+            'sweet_breakfast': sweet_breakfast_options
         }
     
     def get_all_kids(self):

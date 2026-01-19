@@ -41,6 +41,11 @@ def send_morning_routines():
     print("🌅 Kids Morning Routine - WhatsApp Notifications")
     print("=" * 80)
     print(f"📅 Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    # Check if today is Friday (weekday() returns 4 for Friday)
+    is_friday = datetime.now().weekday() == 4
+    if is_friday:
+        print("🎉 Today is Friday - Sweet items enabled!")
     print()
     
     try:
@@ -65,15 +70,27 @@ def send_morning_routines():
             print(f"🎲 Selecting options for {kid_name}...")
             
             # Get options for this kid
-            options = sheets_client.get_kid_options(kid_name)
+            options = sheets_client.get_kid_options(kid_name, include_sweet=is_friday)
             
-            if not options['breakfast']:
+            # Combine regular and sweet breakfast options based on day
+            all_breakfast_options = options['breakfast'].copy()
+            if is_friday and options['sweet_breakfast']:
+                all_breakfast_options.extend(options['sweet_breakfast'])
+                print(f"   🍰 Added {len(options['sweet_breakfast'])} sweet options for Friday!")
+            
+            if not all_breakfast_options:
                 print(f"   ⚠️  No breakfast options found for {kid_name}, skipping...")
                 continue
             
             # Randomly select breakfast
-            breakfast = random.choice(options['breakfast'])
-            print(f"   🍽️  Breakfast: {breakfast}")
+            breakfast = random.choice(all_breakfast_options)
+            
+            # Check if selected item is sweet
+            is_sweet_item = breakfast in options['sweet_breakfast']
+            if is_sweet_item:
+                print(f"   🍽️  Breakfast: {breakfast} 🍰 (Sweet)")
+            else:
+                print(f"   🍽️  Breakfast: {breakfast}")
             
             # Randomly select vegetable (if available)
             vegetable = None
