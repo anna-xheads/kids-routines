@@ -2,8 +2,9 @@ name: Daily Morning Routine
 
 on:
   schedule:
-    # Run every day at 7:00 AM Israel time (5:00 AM UTC)
-    - cron: '0 5 * * *'
+    # Run every day at 7:00 AM Israel time (4:00 AM UTC = 7:00 AM IDT during summer)
+    # Note: Will be 6:00 AM during winter (IST, UTC+2)
+    - cron: '0 4 * * *'
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
