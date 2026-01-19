@@ -85,6 +85,11 @@ def send_evening_dinner():
     print("🌆 Evening Dinner Lottery - WhatsApp Notifications")
     print("=" * 80)
     print(f"📅 Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    # Check if today is Monday (weekday() returns 0 for Monday)
+    is_monday = datetime.now().weekday() == 0
+    if is_monday:
+        print("👵 Today is Monday - אוכל של סבתא!")
     print()
     
     try:
@@ -103,17 +108,25 @@ def send_evening_dinner():
         print()
         
         # Select random options
-        print("🎲 Selecting random dinner...")
-        main_dish_obj = random.choice(options['main_dishes'])
-        main_dish = main_dish_obj['name']
-        vegetable = random.choice(options['vegetables']) if options['vegetables'] else None
-        extra = random.choice(options['extras']) if main_dish_obj['has_extra'] and options['extras'] else None
-        
-        print(f"   🍽️  Main dish: {main_dish}")
-        if vegetable:
-            print(f"   🥗 Vegetable: {vegetable}")
-        if extra:
-            print(f"   ➕ Extra: {extra}")
+        if is_monday:
+            # Monday is always "אוכל של סבתא"
+            print("👵 Monday special: אוכל של סבתא")
+            main_dish = "אוכל של סבתא"
+            vegetable = None  # No vegetables with grandma's food
+            extra = None  # No extras with grandma's food
+            print(f"   �️  Main dish: {main_dish}")
+        else:
+            print("�🎲 Selecting random dinner...")
+            main_dish_obj = random.choice(options['main_dishes'])
+            main_dish = main_dish_obj['name']
+            vegetable = random.choice(options['vegetables']) if options['vegetables'] else None
+            extra = random.choice(options['extras']) if main_dish_obj['has_extra'] and options['extras'] else None
+            
+            print(f"   🍽️  Main dish: {main_dish}")
+            if vegetable:
+                print(f"   🥗 Vegetable: {vegetable}")
+            if extra:
+                print(f"   ➕ Extra: {extra}")
         print()
         
         # Prepare messages
